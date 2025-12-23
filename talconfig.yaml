@@ -78,7 +78,7 @@ patches:
       kubelet:
         nodeIP:
           validSubnets:
-            - 2a01:e0a::/32
+            - 2a01:e0a:5b7:4a40::/60
       registries:
           mirrors:
             ghcr.io:

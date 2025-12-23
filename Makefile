@@ -23,12 +23,12 @@ install-cilium:
     --set securityContext.capabilities.cleanCiliumState="{NET_ADMIN,SYS_ADMIN,SYS_RESOURCE}" \
     --set cgroup.autoMount.enabled=false \
     --set cgroup.hostRoot=/sys/fs/cgroup \
-    --set k8sServiceHost=2a01:e0a:5b7:4a40::11 \
-    --set k8sServicePort=6443 \
+    --set k8sServiceHost=2a01:e0a:5b7:4a42::1  \
+    --set k8sServicePort=443 \
 	--set cgroup.hostRoot=/sys/fs/cgroup \
 	--helm-set ipv6.enabled=true \
 	--helm-set ipv4.enabled=false \
-	--helm-set ipv6NativeRoutingCIDR=2a01:e0a::/32 \
+	--helm-set ipv6NativeRoutingCIDR=2a01:e0a:5b7:4a40::/60 \
 	--helm-set ipam.operator.clusterPoolIPv6PodCIDRList="{2a01:e0a:5b7:4a41::/64}" \
 	--helm-set enableIPv6Masquerade=false \
 	--helm-set routingMode=native
