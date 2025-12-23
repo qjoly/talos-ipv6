@@ -1,0 +1,88 @@
+---
+clusterName: ipv6-only-talos-cluster
+endpoint: https://[2a01:e0a:5b7:4a40::11]:6443 # Devrait être un LoadBalancer en front des control planes
+allowSchedulingOnControlPlanes: true
+cniConfig:
+  name: none
+nodes:
+  - hostname: talos-ipv6-only-01
+    controlPlane: true
+    ipAddress: 192.168.1.138
+    talosImageURL: "docker.io/qjoly/talos"
+    installDisk: /dev/sda
+    nameservers:
+      - 2001:4860:4860::8888
+    patches:
+      - |-
+        machine:
+          network:
+            interfaces:
+              - interface: ens18
+                dhcp: false
+                addresses:
+                  - "2a01:e0a:5b7:4a40::11/128"
+                routes:
+                  - network: ::/0
+                    gateway: 2a01:e0a:5b7:4a40::1
+
+  - hostname: talos-ipv6-only-02
+    controlPlane: true
+    ipAddress: 192.168.1.64
+    installDisk: /dev/sda
+    talosImageURL: "docker.io/qjoly/talos"
+    nameservers:
+      - 2001:4860:4860::8888
+    patches:
+      - |-
+        machine:
+          network:
+            interfaces:
+              - interface: ens18
+                dhcp: false
+                addresses:
+                  - "2a01:e0a:5b7:4a40::12/128"
+                routes:
+                  - network: ::/0
+                    gateway: 2a01:e0a:5b7:4a40::1
+  - hostname: talos-ipv6-only-03
+    controlPlane: true
+    ipAddress: 192.168.1.18
+    installDisk: /dev/sda
+    talosImageURL: "docker.io/qjoly/talos"
+    nameservers:
+      - 2001:4860:4860::8888
+    patches:
+      - |-
+        machine:
+          network:
+            interfaces:
+              - interface: ens18
+                dhcp: false
+                addresses:
+                  - "2a01:e0a:5b7:4a40::13/128"
+                routes:
+                  - network: ::/0
+                    gateway: 2a01:e0a:5b7:4a40::1
+
+patches:
+  - |-
+    cluster:
+      network:
+        podSubnets:
+          - 2a01:e0a:5b7:4a41::/64
+        serviceSubnets:
+          - 2a01:e0a:5b7:4a42::/64
+      proxy:
+          disabled: true
+    machine:
+      kubelet:
+        nodeIP:
+          validSubnets:
+            - 2a01:e0a::/32
+      registries:
+          mirrors:
+            ghcr.io:
+              endpoints:
+              - http://[2a01:e0a:5b7:4a40::b9ac:5c86]:6000/
+
+
